@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+import math
 
 
 def draw_picture(x_list, y_list, node, name):
@@ -27,6 +28,28 @@ def lagrange_interpolation(x, y, x_interp):
     return res
 
 
+def lagerr_interpolation(x_values, y_values, x):
+    """
+    Вычисляет интерполяционный многочлен Лагерра.
+
+    Аргументы:
+    x_values -- список значений аргументов функции
+    y_values -- список значений функции в соответствующих точках
+
+    Возвращает:
+    Функцию, представляющую интерполяционный многочлен Лагерра.
+    """
+    res = 0
+    for i in range(len(x_values)):
+        p = 1
+        for j in range(len(x_values)):
+            if j == i:
+                continue
+            p *= (x - x_values[j]) / (x_values[i] - x_values[j])
+        res += y_values[i] * p * math.exp(x)
+    return res
+
+
 def func(x):
     return x ** 3
 
@@ -40,7 +63,11 @@ if __name__ == "__main__":
 
     for i in x:
         print(f"Истинное значение для функции для x = {i}: {func(i)}")
+
         interp_val = lagrange_interpolation(x, y, i)
-        print(f"Интерполяция Лагранжа для x = {i}: {interp_val}\n")
+        lagerr = lagerr_interpolation(x, y, i)
+
+        print(f"Интерполяция Лагранжа для x = {i}: {interp_val}")
+        print(f"Интерполяция Лагерра для x = {i}: {interp_val}\n")
 
         draw_picture(x, y, (i, interp_val), "lagrange")
